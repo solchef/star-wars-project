@@ -4,10 +4,17 @@ import CharacterCard from '../components/CharacterCard/index'; // Adjust path if
 
 describe('CharacterCard', () => {
   it('renders character card with name', () => {
-    const character = { name: 'Luke Skywalker', image: 'starwars.png' };
-    render(<CharacterCard name={''} imageUrl={''} speciesColor={''} onClick={function (): void {
-        throw new Error('Function not implemented.');
-    } }  />);
+    const character = { name: 'Luke Skywalker', imageUrl: 'starwars.png', speciesColor: 'blue' };
+    
+    render(
+      <CharacterCard
+        name={character.name}
+        imageUrl={character.imageUrl}
+        speciesColor={character.speciesColor}
+        onClick={() => {}}
+      />
+    );
+    
     expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
   });
 });

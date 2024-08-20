@@ -6,7 +6,7 @@ import CharacterCard from './components/CharacterCard';
 import CharacterModal from './components/CharacterModal';
 import Pagination from './components/Pagination';
 import LoadingSpinner from './components/LoadingSpinner';
-import SkeletonCard from './components/SkeletonCard'; // Import the SkeletonCard component
+import SkeletonCard from './components/SkeletonCard'; 
 import { getRandomImageUrl, getSpeciesColor } from './utils';
 import { usePagination } from './hooks/usePagination';
 import Layout from './components/Layout';
@@ -15,10 +15,10 @@ const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { characters, loading, error, selectedCharacter } = useSelector((state: RootState) => state.characters);
   const { currentPage, setCurrentPage } = usePagination();
-  const totalPages = 9; // Assuming there are 9 pages, based on the data from the API
+  const totalPages = 9; 
 
   useEffect(() => {
-    dispatch(fetchCharacters(currentPage)); // Fetch characters for the current page
+    dispatch(fetchCharacters(currentPage)); 
   }, [dispatch, currentPage]);
 
   const handleCardClick = (character: any) => {
@@ -35,7 +35,7 @@ const App: React.FC = () => {
 
   return (
     <Layout>
-    {loading && (
+      {loading && (
         <>
           <LoadingSpinner /> 
           <div className="character-list">
@@ -53,8 +53,8 @@ const App: React.FC = () => {
               <CharacterCard
                 key={character.name}
                 name={character.name}
-                imageUrl={getRandomImageUrl()} // Generates a random image URL
-                speciesColor={getSpeciesColor(character.species)} // Determines color based on species
+                imageUrl={getRandomImageUrl()} 
+                speciesColor={getSpeciesColor(character.species)} 
                 onClick={() => handleCardClick(character)}
               />
             ))}

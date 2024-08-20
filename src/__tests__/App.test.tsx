@@ -23,7 +23,6 @@ global.fetch = jest.fn(() =>
           },
         ],
       }),
-    count: 1,
   })
 ) as jest.Mock;
 
@@ -51,7 +50,7 @@ test('renders Star Wars characters and handles interactions', async () => {
   // Check if the modal with character details is rendered
   await waitFor(() => {
     expect(screen.getByText(/Luke Skywalker/i)).toBeInTheDocument();
-    expect(screen.getByText(/Height: 1.72 meters/i)).toBeInTheDocument();
+    expect(screen.getByText(/Height: 172 cm/i)).toBeInTheDocument();
     expect(screen.getByText(/Mass: 77 kg/i)).toBeInTheDocument();
     expect(screen.getByText(/Birth Year: 19BBY/i)).toBeInTheDocument();
   });

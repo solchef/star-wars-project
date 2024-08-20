@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import { CharacterProvider, useCharacterContext } from '../context/CharacterContext'; // Adjust path if necessary
 import { Character } from '../types'; // Adjust path if necessary
 
@@ -24,17 +25,28 @@ describe('CharacterContext', () => {
     expect(screen.getByText('No Character')).toBeInTheDocument();
     
     // Simulate button click to set character
-    screen.getByText('Set Character').click();
+    fireEvent.click(screen.getByText('Set Character'));
     expect(screen.getByText('Test Character')).toBeInTheDocument();
   });
 
   it('throws error if used outside CharacterProvider', () => {
     const TestComponent = () => {
-      useCharacterContext();
+      useCharacterContext(); // This should throw an error
       return null;
     };
 
-    // Expect error to be thrown
-    expect(() => render(<TestComponent />)).toThrowError('useCharacterContext must be used within a CharacterProvider');
+    // Wrap the component in a try/catch to capture and check the error
+    const renderWithErrorBoundary = () => {
+      try {
+        render(<TestComponent />);
+      } catch (error) {
+        return error;
+      }
+      return null;
+    };
+
+    const error = renderWithErrorBoundary();
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toBe('useCharacterContext must be used within a CharacterProvider');
   });
 });

@@ -1,4 +1,3 @@
-// src/context/CharacterContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Character } from '../types'; // Importing the shared interface
 

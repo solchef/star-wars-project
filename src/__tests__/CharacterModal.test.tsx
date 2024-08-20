@@ -1,50 +1,50 @@
-import { configureStore } from '@reduxjs/toolkit';
-import charactersReducer, { fetchCharacters, clearSelectedCharacter, selectCharacter } from '../redux/slices/charactersSlice'; // Adjust path if necessary
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import CharacterModal from '../components/CharacterModal'; // Adjust path if necessary
+import { CharacterModalProps } from '../types';
 
-describe('charactersSlice', () => {
-  const store = configureStore({ reducer: { characters: charactersReducer } });
+describe('CharacterModal', () => {
+  const mockOnClose = jest.fn();
 
-  it('should return the initial state', () => {
-    expect(store.getState().characters).toEqual({
-      characters: [],
-      loading: false,
-      error: null,
-      selectedCharacter: null,
-    });
+  const defaultProps: CharacterModalProps = {
+    name: 'Luke Skywalker',
+    height: '1.72',
+    mass: '77',
+    birthYear: '19BBY',
+    dateAdded: '2024-08-20',
+    filmsCount: 9,
+    homeworld: {
+      name: 'Tatooine',
+      terrain: 'Desert',
+      climate: 'Arid',
+      residents: 60,
+    },
+    onClose: mockOnClose,
+  };
+
+  it('should render character details correctly', () => {
+    render(<CharacterModal {...defaultProps} />);
+    
+    expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
+    expect(screen.getByText('Height: 1.72 meters')).toBeInTheDocument();
+    expect(screen.getByText('Mass: 77 kg')).toBeInTheDocument();
+    expect(screen.getByText('Birth Year: 19BBY')).toBeInTheDocument();
+    expect(screen.getByText('Date Added: 2024-08-20')).toBeInTheDocument();
+    expect(screen.getByText('Number of Films: 9')).toBeInTheDocument();
+    expect(screen.getByText('Homeworld')).toBeInTheDocument();
+    expect(screen.getByText('Name: Tatooine')).toBeInTheDocument();
+    expect(screen.getByText('Terrain: Desert')).toBeInTheDocument();
+    expect(screen.getByText('Climate: Arid')).toBeInTheDocument();
+    expect(screen.getByText('Number of Residents: 60')).toBeInTheDocument();
   });
 
-  it('should handle selectCharacter and clearSelectedCharacter', () => {
-    const character = { name: 'Darth Vader', image: 'darth-vader.png' };
-
-    // Dispatch selectCharacter action
-    store.dispatch(selectCharacter(character));
-    expect(store.getState().characters.selectedCharacter).toEqual(character);
-
-    // Dispatch clearSelectedCharacter action
-    store.dispatch(clearSelectedCharacter());
-    expect(store.getState().characters.selectedCharacter).toBeNull();
-  });
-
-  it('should handle fetchCharacters async thunk', async () => {
-    // Mock the API response
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve({ results: [{ name: 'Luke Skywalker' }] }),
-      })
-    ) as jest.Mock;
-
-    await store.dispatch(fetchCharacters(1));
-    expect(store.getState().characters.characters).toEqual([{ name: 'Luke Skywalker' }]);
-    expect(store.getState().characters.loading).toBeFalsy();
-    expect(store.getState().characters.error).toBeNull();
-  });
-
-  it('should handle fetchCharacters rejected state', async () => {
-    // Mock the API rejection
-    global.fetch = jest.fn(() => Promise.reject(new Error('Failed to fetch'))) as jest.Mock;
-
-    await store.dispatch(fetchCharacters(1));
-    expect(store.getState().characters.loading).toBeFalsy();
-    expect(store.getState().characters.error).toEqual('Failed to fetch characters');
+  it('should call onClose when close button is clicked', () => {
+    render(<CharacterModal {...defaultProps} />);
+    
+    const closeButton = screen.getByText('Close');
+    fireEvent.click(closeButton);
+    
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 });

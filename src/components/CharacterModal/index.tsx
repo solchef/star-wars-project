@@ -1,8 +1,6 @@
 import React from 'react';
 import { CharacterModalProps, Homeworld } from '../../types';
-import './style.css'
-
-
+import './style.css';
 
 const CharacterModal: React.FC<CharacterModalProps> = ({
   name,

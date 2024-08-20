@@ -1,12 +1,12 @@
 import React from 'react';
-import './style.css'; 
+import './style.css';
 
-const LoadingSpinner: React.FC = () => {
+const LoadingIndicator: React.FC = () => {
   return (
-    <div className="spinner-container">
+    <div className="spinner-container" role="status" aria-live="polite" aria-label="Loading">
       <div className="loading-spinner"></div>
     </div>
   );
 };
 
-export default LoadingSpinner;
+export default LoadingIndicator;
