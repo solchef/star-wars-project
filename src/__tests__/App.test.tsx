@@ -15,7 +15,7 @@ global.fetch = jest.fn(() =>
             name: 'Luke Skywalker',
             species: 'Human',
             url: 'https://swapi.dev/api/people/1/',
-            height: '1.72',
+            height: '172',
             mass: '77',
             birth_year: '19BBY',
             films: ['https://swapi.dev/api/films/1/'],
@@ -34,28 +34,30 @@ test('renders Star Wars characters and handles interactions', async () => {
     </Provider>
   );
 
-  // Check if the loading text is rendered initially
-  expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+  // Check if the loading spinner is rendered initially
+  expect(screen.getByRole('status')).toBeInTheDocument();
 
   // Wait for the loading state to complete and check if the character card is displayed
   await waitFor(() => {
     expect(screen.getByText(/Luke Skywalker/i)).toBeInTheDocument();
   });
 
-  // Check if the character card is clickable and triggers the modal (simplified for demonstration)
+  // Check if the character card is clickable and triggers the modal
   const characterCard = screen.getByText(/Luke Skywalker/i).closest('div');
   if (characterCard) {
     fireEvent.click(characterCard);
   }
 
   // Check if the modal with character details is rendered
-  expect(screen.getByText(/Luke Skywalker/i)).toBeInTheDocument();
-  expect(screen.getByText(/Height: 1.72 meters/i)).toBeInTheDocument();
-  expect(screen.getByText(/Mass: 77 kg/i)).toBeInTheDocument();
-  expect(screen.getByText(/Birth Year: 19BBY/i)).toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.getByText(/Luke Skywalker/i)).toBeInTheDocument();
+    expect(screen.getByText(/Height: 1.72 meters/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mass: 77 kg/i)).toBeInTheDocument();
+    expect(screen.getByText(/Birth Year: 19BBY/i)).toBeInTheDocument();
+  });
 
   // Test closing the modal
-  const closeButton = screen.getByText(/Close/i);
+  const closeButton = screen.getByRole('button', { name: /Close/i });
   fireEvent.click(closeButton);
   await waitFor(() => {
     expect(screen.queryByText(/Luke Skywalker/i)).toBeNull();
